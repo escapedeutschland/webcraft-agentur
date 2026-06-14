@@ -724,15 +724,17 @@ webInp.addEventListener("input",validateWeb);webInp.addEventListener("blur",vali
 function hexOK(v){return /^#[0-9a-fA-F]{6}$/.test(v);}
 [["c1","c1t","haupt"],["c2","c2t","zwei"],["c3","c3t","drei"]].forEach(([cid,tid,key])=>{
   const c=document.getElementById(cid),t=document.getElementById(tid);
-  state.farben[key]=c.value.toUpperCase();t.value=c.value.toUpperCase();
-  c.addEventListener("input",()=>{t.value=c.value.toUpperCase();state.farben[key]=c.value.toUpperCase();renderSummary();});
+  const paint=()=>{c.style.background=c.value;};   // Box zeigt die Farbe (mobil-tauglich, sonst schwarz)
+  state.farben[key]=c.value.toUpperCase();t.value=c.value.toUpperCase();paint();
+  c.addEventListener("input",()=>{t.value=c.value.toUpperCase();state.farben[key]=c.value.toUpperCase();paint();renderSummary();});
   t.addEventListener("input",()=>{let v=t.value.trim();if(v&&v[0]!=="#")v="#"+v;
-    if(hexOK(v)){c.value=v;state.farben[key]=v.toUpperCase();}else{state.farben[key]=t.value.trim();}renderSummary();});
+    if(hexOK(v)){c.value=v;state.farben[key]=v.toUpperCase();paint();}else{state.farben[key]=t.value.trim();}renderSummary();});
 });
 function setColors(arr){
   [["c1","c1t","haupt"],["c2","c2t","zwei"],["c3","c3t","drei"]].forEach(([cid,tid,key],i)=>{
     if(!arr[i])return;
-    document.getElementById(cid).value=arr[i];document.getElementById(tid).value=arr[i].toUpperCase();state.farben[key]=arr[i].toUpperCase();
+    const c=document.getElementById(cid);c.value=arr[i];c.style.background=arr[i];
+    document.getElementById(tid).value=arr[i].toUpperCase();state.farben[key]=arr[i].toUpperCase();
   });
   renderSummary();
 }
