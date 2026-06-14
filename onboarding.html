@@ -947,9 +947,7 @@ document.getElementById("dl").addEventListener("click",()=>{
   }
   nf.classList.remove("show");
   const name=(state.betrieb.name||"betrieb").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
-  const blob=new Blob([JSON.stringify(buildObj(),null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
-  a.download="onboarding-"+name+".json";document.body.appendChild(a);a.click();a.remove();
+  try{ fetch('https://script.google.com/macros/s/AKfycbzF6-kszkgL8HZ2lb7mmPXNduOjeJMhCWAF864x9eLFADCWml5Npt83QPoaTqqQA4n9/exec',{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(buildObj())}); }catch(e){}
   sv.classList.add("show");sv.scrollIntoView({behavior:"smooth",block:"nearest"});
   toast("Deine Angaben wurden gespeichert.");
 });
