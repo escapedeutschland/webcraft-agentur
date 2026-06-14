@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebCraft · Instagram-Onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F3EE; --surface:#FFFFFF; --line:#E3E0D6; --line-strong:#CFCBBE;
+    --ink:#181B1F; --muted:#6B6F76; --faint:#9A9C9F;
+    --signal:#0F6E62; --signal-soft:#E3EEEB; --signal-deep:#0A4F46;
+    --term-bg:#13181A; --term-line:#243033; --term-key:#7FD8C9; --term-str:#E7C98A;
+    --term-text:#D8E2E0; --term-muted:#5E6F6C;
+    --danger:#B23A2E; --ok:#2F7E58;
+    --r:10px; --shadow:0 1px 2px rgba(24,27,31,.05),0 8px 28px -18px rgba(24,27,31,.28);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--paper);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 24px;}
+  header.mast{padding:34px 0 26px;border-bottom:1px solid var(--line);}
+  .mast-row{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .logo{font-family:"Space Grotesk";font-weight:700;font-size:22px;letter-spacing:-.02em;}
+  .logo .spark{color:var(--signal);}
+  .mast-tag{font-family:"JetBrains Mono";font-size:12px;color:var(--muted);border:1px solid var(--line-strong);border-radius:100px;padding:4px 11px;}
+  h1{font-family:"Space Grotesk";font-weight:600;font-size:clamp(26px,4vw,38px);letter-spacing:-.025em;line-height:1.08;margin:20px 0 8px;max-width:20ch;}
+  .lede{color:var(--muted);max-width:62ch;font-size:16px;margin:0;}
+  .legend{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:5px 13px;margin-top:16px;}
+  .legend .req{margin-left:0;}
+  .grid{display:grid;grid-template-columns:1fr 380px;gap:34px;align-items:start;padding:32px 0 64px;}
+  @media(max-width:880px){.grid{grid-template-columns:1fr;}}
+  section.block{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:24px 24px 26px;margin-bottom:18px;box-shadow:var(--shadow);}
+  .sec-head{display:flex;align-items:center;gap:12px;margin:0 0 4px;}
+  .sec-num{font-family:"JetBrains Mono";font-size:12px;font-weight:500;color:var(--signal);border:1px solid var(--signal);border-radius:6px;min-width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;}
+  .sec-head h2{font-family:"Space Grotesk";font-weight:600;font-size:18px;letter-spacing:-.01em;margin:0;}
+  .sec-desc{color:var(--muted);font-size:13.5px;margin:2px 0 18px;}
+  .sec-opt{font-family:"Inter";font-weight:400;font-size:13px;color:var(--faint);}
+  .req{color:var(--danger);font-weight:700;margin-left:2px;}
+  label.fld{display:block;margin:0 0 14px;}
+  label.fld .lab{display:block;font-size:13px;font-weight:500;margin-bottom:5px;}
+  label.fld .opt{color:var(--faint);font-weight:400;}
+  input[type=text],input[type=url],input[type=email],textarea,select{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line-strong);border-radius:8px;padding:10px 12px;}
+  textarea{resize:vertical;min-height:64px;line-height:1.45;}
+  input:focus,textarea:focus,select:focus{outline:2px solid var(--signal);outline-offset:1px;border-color:var(--signal);background:var(--surface);}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.two{grid-template-columns:1fr;}}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;}
+  .chip{cursor:pointer;border:1px solid var(--line-strong);background:var(--paper);border-radius:8px;padding:9px 13px;font-size:13.5px;font-weight:500;display:inline-flex;align-items:center;gap:8px;transition:.12s;user-select:none;}
+  .chip:hover{border-color:var(--signal);}
+  .chip input{position:absolute;opacity:0;width:0;height:0;}
+  .chip .tick{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--line-strong);display:inline-flex;align-items:center;justify-content:center;flex:none;}
+  .chip.radio .tick{border-radius:50%;}
+  .chip.on{border-color:var(--signal);background:var(--signal-soft);color:var(--signal-deep);}
+  .chip.on .tick{background:var(--signal);border-color:var(--signal);}
+  .chip.on .tick::after{content:"";width:7px;height:7px;background:#fff;border-radius:2px;}
+  .chip.radio.on .tick::after{border-radius:50%;}
+  .chip[aria-disabled=true]{opacity:.42;cursor:not-allowed;}
+  .chip[aria-disabled=true]:hover{border-color:var(--line-strong);}
+  .hint{font-size:12.5px;color:var(--faint);margin:8px 0 0;}
+  /* option rows (radio with description) */
+  .optrow{display:flex;gap:11px;align-items:flex-start;border:1px solid var(--line-strong);border-radius:9px;padding:12px 13px;cursor:pointer;background:var(--paper);transition:.12s;margin-bottom:9px;}
+  .optrow:hover{border-color:var(--signal);}
+  .optrow.on{border-color:var(--signal);background:var(--signal-soft);}
+  .optrow .rtick{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;margin-top:1px;display:inline-flex;align-items:center;justify-content:center;}
+  .optrow.on .rtick{border-color:var(--signal);background:var(--signal);}
+  .optrow.on .rtick::after{content:"";width:7px;height:7px;border-radius:50%;background:#fff;}
+  .optrow .otext{display:flex;flex-direction:column;gap:3px;}
+  .optrow .ot{font-weight:600;font-size:14px;line-height:1.3;}
+  .optrow .od{font-size:12.5px;color:var(--muted);line-height:1.45;}
+  .optrow.on .od{color:var(--signal-deep);}
+  /* profile disclosure */
+  .profile{border:1px solid var(--line);border-radius:9px;margin-bottom:11px;overflow:hidden;}
+  .profile-head{display:flex;align-items:center;gap:11px;padding:13px 15px;cursor:pointer;background:var(--paper);user-select:none;}
+  .profile-head:hover{background:#EEEDE6;}
+  .profile.on .profile-head{background:var(--signal-soft);}
+  .pf-name{font-weight:600;font-size:14.5px;flex:1;}
+  .pf-count{font-family:"JetBrains Mono";font-size:11.5px;color:var(--muted);}
+  .profile.on .pf-count{color:var(--signal-deep);}
+  .leistungen{display:none;padding:5px 15px 15px;border-top:1px solid var(--line);}
+  .profile.on .leistungen{display:block;}
+  .leistungen .gate-note{font-size:12px;color:var(--muted);margin:11px 0 11px;display:flex;gap:7px;align-items:flex-start;}
+  .leistungen .gate-note b{color:var(--ink);font-weight:600;}
+  .leis-warn{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.5;color:#8A4B00;background:#FFF6E6;border:1px solid #F0CE8A;border-radius:8px;padding:10px 12px;margin:11px 0 4px;}
+  .leis-warn .wi{flex:none;font-size:14px;line-height:1.2;}
+  .leis-warn b{color:#6B3B00;}
+  .profile.warn .profile-head{background:#FFF6E6;}
+  .profile.warn .pf-count{color:#8A4B00;font-weight:600;}
+  .leis-row{display:flex;align-items:center;gap:10px;padding:8px 0;cursor:pointer;border-top:1px dotted var(--line);}
+  .leis-row:first-of-type{border-top:none;}
+  .leis-row .tick{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--line-strong);display:inline-flex;align-items:center;justify-content:center;flex:none;}
+  .leis-row.on .tick{background:var(--signal);border-color:var(--signal);}
+  .leis-row.on .tick::after{content:"";width:7px;height:7px;background:#fff;border-radius:2px;}
+  .leis-row .lname{font-size:13.5px;}
+  .leis-row .typ{font-family:"JetBrains Mono";font-size:10px;color:var(--faint);margin-left:auto;}
+  .leis-row input{position:absolute;opacity:0;width:0;height:0;}
+  .scaffold-note{font-size:13px;color:var(--muted);background:var(--paper);border:1px dashed var(--line-strong);border-radius:8px;padding:13px 15px;margin-top:4px;}
+  .scaffold-note b{color:var(--ink);}
+  .asset-other{display:none;margin-top:10px;}
+  .asset-other.show{display:block;}
+  .liefer-hint{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.5;
+    color:var(--signal-deep);background:var(--signal-soft);border:1px solid #BFE0DA;
+    border-left:3px solid var(--signal);border-radius:9px;padding:12px 14px;margin:0 0 18px;}
+  .liefer-hint .lh-i{flex:none;font-size:15px;line-height:1.3;}
+  .liefer-hint b{font-weight:600;}
+  /* URL/email validation */
+  .field-wrap{position:relative;}
+  .field-wrap input{padding-right:38px;}
+  .vstat{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:15px;line-height:1;display:none;}
+  .field-wrap.valid input{border-color:#3E9C6E;}
+  .field-wrap.valid .vstat.ok{display:block;color:#3E9C6E;}
+  .field-wrap.invalid input{border-color:var(--danger);}
+  .field-wrap.invalid .vstat.bad{display:block;color:var(--danger);}
+  .vmsg{font-size:12.5px;margin-top:6px;display:none;line-height:1.45;}
+  .vmsg.show{display:block;}
+  .vmsg.ok{color:var(--ok);}
+  .vmsg.bad{color:var(--danger);}
+  .vmsg a{color:var(--signal-deep);font-weight:600;}
+  /* Logo & Farben */
+  .drop{border:1.5px dashed var(--line-strong);border-radius:10px;padding:22px;text-align:center;cursor:pointer;background:var(--paper);transition:.12s;display:block;}
+  .drop:hover,.drop.drag{border-color:var(--signal);background:var(--signal-soft);}
+  .drop .di{font-size:13.5px;color:var(--muted);}
+  .drop .di b{color:var(--signal-deep);font-weight:600;}
+  .drop .sub{font-size:12px;color:var(--faint);margin-top:4px;}
+  .logo-prev{display:none;align-items:center;gap:14px;margin-top:13px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .logo-prev.show{display:flex;}
+  .logo-prev .thumb{width:64px;height:64px;border-radius:8px;background:#fff url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="4" height="4" fill="%23eee"/><rect x="4" y="4" width="4" height="4" fill="%23eee"/></svg>');background-size:10px;border:1px solid var(--line);object-fit:contain;flex:none;}
+  .logo-prev .meta{flex:1;min-width:0;}
+  .logo-prev .fn{font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .logo-prev .rm{font-size:12.5px;color:var(--danger);cursor:pointer;background:none;border:none;padding:4px 0;font-family:inherit;}
+  .logo-alpha{display:none;font-size:12.5px;line-height:1.5;color:#8A4B00;background:#FFF6E6;border:1px solid #F0CE8A;border-radius:8px;padding:10px 12px;margin-top:10px;}
+  .logo-alpha.show{display:block;}
+  .png-hint{font-size:12.5px;color:var(--muted);line-height:1.5;background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--signal);border-radius:8px;padding:12px 14px;margin-top:12px;}
+  .png-hint b{color:var(--ink);font-weight:600;}
+  .colors{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:6px;}
+  @media(max-width:560px){.colors{grid-template-columns:1fr;}}
+  .color{border:1px solid var(--line-strong);border-radius:9px;padding:11px;background:var(--paper);}
+  .color .clab{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:7px;}
+  .color .crow{display:flex;align-items:center;gap:8px;}
+  .color input[type=color]{-webkit-appearance:none;appearance:none;width:38px;height:38px;border:1px solid var(--line-strong);border-radius:8px;padding:0;background:none;cursor:pointer;flex:none;}
+  .color input[type=color]::-webkit-color-swatch-wrapper{padding:3px;}
+  .color input[type=color]::-webkit-color-swatch{border:none;border-radius:5px;}
+  .color input[type=text]{font-family:"JetBrains Mono";font-size:13px;text-transform:uppercase;}
+  .suggest-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;}
+  .btn-sm{font:inherit;font-weight:600;font-size:13px;border-radius:8px;cursor:pointer;padding:9px 14px;border:1px solid var(--signal);background:var(--signal-soft);color:var(--signal-deep);}
+  .btn-sm:hover{background:var(--signal);color:#fff;}
+  .btn-sm:disabled{opacity:.45;cursor:not-allowed;background:var(--paper);color:var(--muted);border-color:var(--line-strong);}
+  .suggest-note{font-size:12px;color:var(--faint);}
+  /* confirm box (Eignung) */
+  .confirm-box{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--line-strong);border-radius:10px;padding:15px;background:var(--paper);cursor:pointer;transition:.12s;}
+  .confirm-box:hover{border-color:var(--signal);}
+  .confirm-box.on{border-color:var(--signal);background:var(--signal-soft);}
+  .confirm-box .tick{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--line-strong);flex:none;margin-top:1px;display:inline-flex;align-items:center;justify-content:center;}
+  .confirm-box.on .tick{background:var(--signal);border-color:var(--signal);}
+  .confirm-box.on .tick::after{content:"";width:9px;height:9px;background:#fff;border-radius:2px;}
+  .confirm-box .ctext{font-size:13.5px;line-height:1.5;}
+  .confirm-box .ctext b{font-weight:600;}
+  /* Style A/B/C */
+  .stilrow{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;}
+  @media(max-width:560px){.stilrow{grid-template-columns:1fr;}}
+  .stil{cursor:pointer;border:1px solid var(--line-strong);border-radius:10px;padding:16px 16px 17px;background:var(--paper);transition:.12s;display:flex;flex-direction:column;gap:0;position:relative;}
+  .stil:hover{border-color:var(--signal);}
+  .stil.on{border-color:var(--signal);background:var(--signal-soft);}
+  .stil .k{position:absolute;top:13px;right:14px;font-family:"Space Grotesk";font-weight:700;font-size:13px;color:var(--faint);line-height:1;}
+  .stil.on .k{color:var(--signal);}
+  .stil .t{font-family:"Space Grotesk";font-weight:600;font-size:16px;letter-spacing:-.01em;padding-right:22px;margin-bottom:7px;}
+  .stil .d{font-size:12.5px;color:var(--muted);line-height:1.5;}
+  .stil.on .d{color:var(--signal-deep);}
+  .stil input{position:absolute;opacity:0;width:0;height:0;}
+  /* live config panel */
+  aside.term-wrap{position:sticky;top:20px;}
+  .term{background:var(--term-bg);border-radius:12px;overflow:hidden;box-shadow:0 20px 50px -28px rgba(0,0,0,.55);}
+  .term-bar{display:flex;align-items:center;gap:8px;padding:12px 15px;border-bottom:1px solid var(--term-line);}
+  .term-bar .dot{width:10px;height:10px;border-radius:50%;background:#2C383A;}
+  .term-bar .title{font-family:"JetBrains Mono";font-size:12px;color:var(--term-muted);margin-left:6px;}
+  .term-bar .live{margin-left:auto;font-family:"JetBrains Mono";font-size:10.5px;color:var(--term-key);display:flex;align-items:center;gap:6px;}
+  .term-bar .live .pulse{width:7px;height:7px;border-radius:50%;background:var(--term-key);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+  .meter{padding:13px 15px 4px;}
+  .meter .mlab{font-family:"JetBrains Mono";font-size:11px;color:var(--term-muted);display:flex;justify-content:space-between;margin-bottom:6px;}
+  .meter .bar{height:5px;background:var(--term-line);border-radius:100px;overflow:hidden;}
+  .meter .bar i{display:block;height:100%;width:0;background:var(--term-key);border-radius:100px;transition:width .3s;}
+  .summary{padding:6px 16px 16px;display:flex;flex-direction:column;gap:13px;max-height:44vh;overflow:auto;}
+  .summary .row{display:flex;flex-direction:column;gap:3px;}
+  .summary .rk{font-family:"JetBrains Mono";font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--term-muted);}
+  .summary .rv{font-size:13.5px;color:var(--term-text);line-height:1.45;}
+  .summary .rv.empty{color:var(--term-muted);font-style:italic;}
+  .summary .pill{display:inline-block;background:var(--term-line);color:var(--term-text);border-radius:6px;padding:3px 9px;font-size:12px;margin:3px 4px 0 0;}
+  .summary .pill.lstg{background:rgba(127,216,201,.14);color:var(--term-key);}
+  .summary .quote{border-left:2px solid var(--term-line);padding-left:10px;color:var(--term-text);font-size:13px;line-height:1.45;}
+  .summary hr{border:none;border-top:1px solid var(--term-line);margin:2px 0;}
+  .term-actions{display:flex;gap:9px;padding:13px 15px 16px;border-top:1px solid var(--term-line);}
+  .btn{font:inherit;font-weight:600;font-size:13.5px;border-radius:8px;cursor:pointer;padding:10px 14px;border:1px solid transparent;flex:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.12s;}
+  .btn.primary{background:var(--term-key);color:#06221E;}
+  .btn.primary:hover{background:#9CE6D9;}
+  .btn:focus-visible{outline:2px solid var(--term-key);outline-offset:2px;}
+  .needfix{display:none;margin:0 15px 15px;background:rgba(214,90,70,.12);border:1px solid #E8907F;border-radius:9px;padding:13px 14px;}
+  .needfix.show{display:block;}
+  .needfix .nt{font-family:"Inter";font-weight:600;font-size:13px;color:#F2B5A8;margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+  .needfix ul{margin:0;padding-left:18px;}
+  .needfix li{font-family:"Inter";font-size:12.5px;color:var(--term-text);line-height:1.6;}
+  .saved{display:none;margin:0 15px 15px;background:rgba(127,216,201,.12);border:1px solid var(--term-key);border-radius:9px;padding:13px 14px;}
+  .saved.show{display:block;}
+  .saved .st{font-family:"Inter";font-weight:600;font-size:13.5px;color:var(--term-key);margin-bottom:5px;display:flex;align-items:center;gap:7px;}
+  .saved .sb{font-family:"Inter";font-size:12.5px;color:var(--term-text);line-height:1.55;}
+  .term-foot{font-family:"Inter";font-size:11px;color:var(--term-muted);padding:0 15px 15px;line-height:1.5;}
+  footer.foot{border-top:1px solid var(--line);padding:22px 0 50px;color:var(--faint);font-size:12.5px;}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:9px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:9;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+</style>
+</head>
+<body>
+<header class="mast">
+  <div class="wrap">
+    <div class="mast-row">
+      <span class="logo">Web<span class="spark">Craft</span></span>
+      <span class="mast-tag">Instagram · Onboarding</span>
+    </div>
+    <h1>Erzähl uns etwas über dich, deine Arbeit und was dich auszeichnet.</h1>
+    <p class="lede">Mit deinen Antworten stellen wir deinen Instagram-Auftritt so ein, dass er zu dir und deiner Arbeit passt. Wir zeigen später nur Themen, die wirklich zu deinen Leistungen gehören. Keine Sorge — du brauchst dich mit Instagram nicht auszukennen. Rechts siehst du beim Ausfüllen live eine Zusammenfassung dessen, was wir daraus machen.</p>
+    <span class="legend"><span class="req">*</span> rot markierte Felder sind Pflichtangaben, der Rest ist freiwillig.</span>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="grid">
+  <main>
+    <!-- 1 ÜBER DICH -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">1</span><h2>Über dich</h2></div>
+      <p class="sec-desc">Wer bist du und wie erreichen wir dich? Name und E-Mail brauchen wir, der Rest hilft zusätzlich.</p>
+      <label class="fld"><span class="lab">Name deines Betriebs<span class="req">*</span></span>
+        <input type="text" id="f_name" placeholder="z. B. Elektro Sommer GmbH"></label>
+      <label class="fld"><span class="lab">E-Mail (so erreichen wir dich)<span class="req">*</span></span>
+        <span class="field-wrap" id="emailWrap">
+          <input type="email" id="f_email" placeholder="z. B. info@elektro-sommer.de" autocomplete="off">
+          <span class="vstat ok" aria-hidden="true">✓</span>
+          <span class="vstat bad" aria-hidden="true">!</span>
+        </span>
+        <span class="vmsg" id="emailMsg" aria-live="polite"></span></label>
+      <label class="fld"><span class="lab">E-Mail wiederholen<span class="req">*</span></span>
+        <span class="field-wrap" id="email2Wrap">
+          <input type="email" id="f_email2" placeholder="Bitte dieselbe E-Mail noch einmal eintippen" autocomplete="off">
+          <span class="vstat ok" aria-hidden="true">✓</span>
+          <span class="vstat bad" aria-hidden="true">!</span>
+        </span>
+        <span class="vmsg" id="email2Msg" aria-live="polite"></span></label>
+      <div class="two">
+        <label class="fld"><span class="lab">Ort / Region <span class="opt">(optional)</span></span>
+          <input type="text" id="f_ort" placeholder="z. B. Kassel"></label>
+        <label class="fld"><span class="lab">Dein Name <span class="opt">(optional)</span></span>
+          <input type="text" id="f_kontakt" placeholder="z. B. Maxime Sommer"></label>
+      </div>
+      <label class="fld"><span class="lab">Öffnungszeiten <span class="opt">(optional)</span></span>
+        <input type="text" id="f_zeiten" placeholder="z. B. Mo–Fr 8–17 Uhr"></label>
+      <label class="fld"><span class="lab">Hast du schon eine Website? <span class="opt">(optional)</span></span>
+        <span class="field-wrap" id="webWrap">
+          <input type="url" id="f_web" placeholder="z. B. www.elektro-sommer.de" autocomplete="url">
+          <span class="vstat ok" aria-hidden="true">✓</span>
+          <span class="vstat bad" aria-hidden="true">!</span>
+        </span>
+        <span class="vmsg" id="webMsg" aria-live="polite"></span></label>
+    </section>
+
+    <!-- 2 LOGO, FARBEN & SCHRIFT -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">2</span><h2>Logo, Farben &amp; Schrift <span class="sec-opt">(optionale Angaben)</span></h2></div>
+      <p class="sec-desc">Damit deine Beiträge nach dir aussehen. Hast du ein Logo, lade es hoch — wir können daraus auch gleich Farbvorschläge ableiten, die du anpassen kannst.</p>
+      <p class="lab" style="font-size:13px;font-weight:500;margin:0 0 6px;">Dein Logo</p>
+      <label class="drop" id="drop" for="f_logo">
+        <input type="file" id="f_logo" accept="image/png" hidden>
+        <div class="di"><b>Logo auswählen</b> oder hierher ziehen</div>
+        <div class="sub">Nur PNG mit durchsichtigem Hintergrund</div>
+      </label>
+      <div class="logo-prev" id="logoPrev">
+        <img class="thumb" id="logoThumb" alt="Logo-Vorschau">
+        <div class="meta"><div class="fn" id="logoName"></div>
+          <button type="button" class="rm" id="logoRm">entfernen</button></div>
+      </div>
+      <div class="logo-alpha" id="logoAlpha">⚠️ Dein Logo scheint <b>keinen durchsichtigen Hintergrund</b> zu haben. So können wir es nicht sauber in die Beiträge einbauen — bitte den Hintergrund entfernen (siehe Hinweis unten) und neu hochladen.</div>
+      <div class="png-hint">
+        <b>Warum nur PNG?</b> Ein PNG kann einen durchsichtigen Hintergrund haben. So können wir dein Logo sauber in die Beiträge einbauen — ohne störendes weißes Kästchen drumherum.<br><br>
+        <b>Du hast nur ein Logo mit Hintergrund (z. B. JPG oder ein Foto)?</b> Kein Problem. Es gibt kostenlose Web-Tools, mit denen du den Hintergrund in wenigen Sekunden durchsichtig machst und das Bild als PNG herunterlädst. Einfach Logo hochladen, Hintergrund entfernen lassen, als PNG speichern — und hier hochladen.</div>
+      <p class="lab" style="font-size:13px;font-weight:500;margin:22px 0 4px;">Deine drei Farben</p>
+      <p class="sec-desc" style="margin:0 0 12px;">Die Farben, die zu dir passen. Du kannst sie selbst wählen — oder unten aus dem Logo vorschlagen lassen und dann anpassen.</p>
+      <div class="colors" id="colors">
+        <div class="color"><div class="clab">Hauptfarbe</div><div class="crow">
+          <input type="color" id="c1" value="#0F6E62" aria-label="Hauptfarbe wählen">
+          <input type="text" id="c1t" placeholder="#0F6E62" maxlength="7"></div></div>
+        <div class="color"><div class="clab">Zweite Farbe</div><div class="crow">
+          <input type="color" id="c2" value="#1A1D21" aria-label="Zweite Farbe wählen">
+          <input type="text" id="c2t" placeholder="#1A1D21" maxlength="7"></div></div>
+        <div class="color"><div class="clab">Dritte Farbe</div><div class="crow">
+          <input type="color" id="c3" value="#F4F3EE" aria-label="Dritte Farbe wählen">
+          <input type="text" id="c3t" placeholder="#F4F3EE" maxlength="7"></div></div>
+      </div>
+      <div class="suggest-row">
+        <button type="button" class="btn-sm" id="suggest" disabled>Farben aus Logo vorschlagen</button>
+        <span class="suggest-note" id="suggestNote">Erst ein Logo hochladen, dann sind Vorschläge möglich.</span>
+      </div>
+      <label class="fld" style="margin-top:20px;"><span class="lab">Hausschrift <span class="opt">(optional)</span></span>
+        <input type="text" id="f_schrift" placeholder="z. B. Montserrat – oder leer lassen">
+        <span class="hint">Nutzt du eine bestimmte Schriftart? Dann nenn sie hier. Lässt du das Feld leer, wählen wir automatisch eine Schrift, die zu deinem Stil passt.</span></label>
+    </section>
+
+    <!-- 3 HANDWERK -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">3</span><h2>Dein Handwerk<span class="req">*</span></h2></div>
+      <p class="sec-desc">Was ist dein Haupthandwerk? Hier geht es erstmal nur um die grobe Oberkategorie.</p>
+      <div class="chips" id="trades"></div>
+      <label class="fld" id="freitextWrap" style="display:none;margin-top:14px;"><span class="lab">Welches Handwerk ist es?<span class="req">*</span></span>
+        <input type="text" id="f_freitext" placeholder="Beschreibe dein Handwerk in eigenen Worten"></label>
+    </section>
+
+    <!-- 4 WAS BIETEST DU AN -->
+    <section class="block" id="block-profile">
+      <div class="sec-head"><span class="sec-num">4</span><h2>Was bietest du an?<span class="req">*</span></h2></div>
+      <p class="sec-desc">Tippe jeden Bereich an, in dem du arbeitest. Die häufigsten Leistungen haben wir dir schon vorgehakt — passe sie einfach an. Wir zeigen später nur Themen zu den Leistungen, die du hier ankreuzt.</p>
+      <div id="profiles"></div>
+    </section>
+
+    <!-- 5 WAS KANNST DU LIEFERN -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">5</span><h2>Was kannst du liefern?<span class="req">*</span></h2></div>
+      <p class="sec-desc">Du machst die Fotos und Videos selbst — wir liefern die Baupläne dazu. Sag uns, was realistisch drin ist, damit wir die passenden Formate vorschlagen.</p>
+      <div class="liefer-hint"><span class="lh-i">💡</span><span><b>Je mehr du selbst beisteuerst, desto besser wird dein Auftritt.</b> Mehr Material und mehr, was du zeigst, bedeutet abwechslungsreichere, interessantere Beiträge — und einen lebendigeren Instagram-Auftritt, der mehr Menschen anspricht.</span></div>
+      <p class="lab" style="font-size:13px;font-weight:500;margin:0 0 8px;">Wie viel Material kannst du beisteuern?<span class="req">*</span></p>
+      <div id="material"></div>
+      <p class="lab" style="font-size:13px;font-weight:500;margin:18px 0 8px;">Zeigt ihr euch selbst vor der Kamera?<span class="req">*</span></p>
+      <div id="kamera"></div>
+      <p class="lab" style="font-size:13px;font-weight:500;margin:18px 0 6px;">Was gibt es bei dir zu zeigen? <span class="opt">(optional, mehrfach)</span></p>
+      <p class="sec-desc" style="margin:0 0 10px;">Hak an, was auf dich zutrifft — das schaltet passende Beitrags-Ideen frei.</p>
+      <div class="chips" id="assets"></div>
+      <div class="asset-other" id="assetOtherWrap">
+        <input type="text" id="f_assetOther" placeholder="Was noch? z. B. „historische Werkstatt“, „großer Showroom“">
+      </div>
+    </section>
+
+    <!-- 6 STIL & ANSPRACHE -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">6</span><h2>Stil &amp; Ansprache<span class="req">*</span></h2></div>
+      <p class="sec-desc">Das legt nur den Ton fest, nicht die Inhalte.</p>
+      <p class="lab" style="margin:0 0 7px;font-size:13px;font-weight:500;">Wie sollen deine Beiträge klingen?<span class="req">*</span></p>
+      <div class="stilrow" id="stil"></div>
+      <p class="lab" style="margin:20px 0 4px;font-size:13px;font-weight:500;">Wie sollen deine Follower angesprochen werden?<span class="req">*</span></p>
+      <p class="sec-desc" style="margin:0 0 11px;">Damit ist gemeint, wie <b>du deine Leserinnen und Leser auf Instagram</b> ansprichst — nicht, wie wir mit dir reden. „Du“ wirkt locker und persönlich, „Sie“ wirkt förmlich.</p>
+      <div class="chips" id="anrede"></div>
+    </section>
+
+    <!-- 7 MEINUNG -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">7</span><h2>Deine Meinung &amp; Erfahrung <span class="sec-opt">(optionale Angaben)</span></h2></div>
+      <p class="sec-desc">Das macht deine Beiträge unverwechselbar — sie klingen dann nach dir und nicht nach irgendeiner Firma. Ein paar Stichworte genügen, du musst keine ganzen Sätze schreiben.</p>
+      <label class="fld"><span class="lab">Welcher verbreiteten Aussage oder welchem verbreiteten Standpunkt in deiner Branche widersprichst du?</span>
+        <textarea id="s_meinung" placeholder="z. B. „Billige Wallboxen aus dem Netz sind selten ein Schnäppchen.“"></textarea></label>
+      <label class="fld"><span class="lab">Welchen Rat gibst du immer wieder?</span>
+        <textarea id="s_rat" placeholder="z. B. „Vor jedem Angebot schauen wir uns die Altanlage persönlich an.“"></textarea></label>
+      <label class="fld"><span class="lab">Woran erkennt man deine Handschrift — was machst du anders als andere?</span>
+        <textarea id="s_handschrift" placeholder="z. B. „Sauberkeit auf der Baustelle ist bei uns Ehrensache.“"></textarea></label>
+      <label class="fld"><span class="lab">Worüber sollen wir auf keinen Fall etwas schreiben? <span class="opt">(Tabus)</span></span>
+        <textarea id="s_tabu" placeholder="z. B. „Keine Tagespolitik, keine Preisversprechen.“"></textarea></label>
+    </section>
+
+    <!-- 8 BESTÄTIGUNG -->
+    <section class="block">
+      <div class="sec-head"><span class="sec-num">8</span><h2>Kurze Bestätigung<span class="req">*</span></h2></div>
+      <p class="sec-desc">Ein Satz noch, damit klar ist, worum es bei deinem Auftritt geht.</p>
+      <div class="confirm-box" id="eignung" role="checkbox" aria-checked="false" tabindex="0">
+        <span class="tick"></span>
+        <span class="ctext">Bei meinem Account geht es vor allem um meine <b>Produkte und/oder Dienstleistungen</b> — nicht um politische, religiöse oder weltanschauliche Themen.</span>
+      </div>
+    </section>
+  </main>
+
+  <aside class="term-wrap">
+    <div class="term">
+      <div class="term-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="title">Dein Auftritt in Kürze</span>
+        <span class="live"><span class="pulse"></span>live</span>
+      </div>
+      <div class="meter">
+        <div class="mlab"><span>Vollständigkeit</span><span id="pct">0%</span></div>
+        <div class="bar"><i id="barfill"></i></div>
+      </div>
+      <div class="summary" id="summary"></div>
+      <div class="term-actions">
+        <button class="btn primary" id="dl">Angaben speichern</button>
+      </div>
+      <div class="needfix" id="needfix">
+        <div class="nt">⚠️ Noch nicht ganz fertig</div>
+        <ul id="needfixList"></ul>
+      </div>
+      <div class="saved" id="saved">
+        <div class="st">✓ Geschafft — deine Angaben sind gespeichert.</div>
+        <div class="sb">Wir haben deine Angaben gesichert. Du kannst dieses Fenster jetzt schließen — wir melden uns und richten deinen Auftritt ein. Solltest du etwas ändern wollen, korrigiere es einfach oben und klicke noch einmal auf „Angaben speichern“.</div>
+      </div>
+      <p class="term-foot">Mit „Angaben speichern“ verarbeiten wir diese Daten, um deinen Instagram-Auftritt einzurichten.</p>
+    </div>
+  </aside>
+</div>
+</div>
+
+<footer class="foot"><div class="wrap">WebCraft · Onboarding-Prototyp</div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   ANPASSEN, sobald der Faktenpool (Excel) weitere Gewerke enthält:
+   Pro freigeschaltetem Gewerk muss (1) hier active:true gesetzt werden UND
+   (2) in renderProfiles() eine eigene Profil-/Leistungsliste hinterlegt sein
+   (analog ELEKTRO_PROFILE). Ein Gewerk OHNE Profilliste freizuschalten erzeugt
+   eine Sackgasse: Der Kunde kann keine Leistung ankreuzen, die Pflichtprüfung
+   („mind. ein Bereich mit Leistung") blockiert dann das Speichern.
+   Stand: nur Elektrotechnik ist vollständig hinterlegt. Siehe Merkliste.
+   ============================================================================ */
+const TRADES=[
+  {key:"elektrotechnik",label:"Elektrotechnik",active:true},
+  {key:"shk",label:"Sanitär / Heizung / Klima",active:false},
+  {key:"kfz",label:"Kraftfahrzeugtechnik",active:false},
+  {key:"maler",label:"Maler & Lackierer",active:false},
+  {key:"dachdecker",label:"Dachdecker",active:false},
+  {key:"maurer_zimmerer",label:"Maurer & Zimmerer",active:false},
+  {key:"tischler",label:"Tischler",active:false},
+  {key:"fliesenleger",label:"Fliesenleger",active:false},
+  {key:"baecker_fleischer",label:"Bäcker & Fleischer",active:false},
+  {key:"friseure",label:"Friseure",active:false},
+  {key:"gesundheitsgewerk",label:"Gesundheitsgewerk",active:false},
+  {key:"zweirad_landmaschinen",label:"Zweirad & Landmaschinen",active:false},
+  {key:"gebaeudereinigung",label:"Gebäudereinigung",active:false},
+  {key:"garten_landschaft",label:"Garten & Landschaftsbau",active:false},
+  {key:"persoenliche_dienstleister",label:"Persönliche Dienstleister",active:false},
+  {key:"anderes",label:"Anderes Handwerk",active:true,frei:true},
+];
+const ELEKTRO_PROFILE=[
+ {key:"energie",label:"Energie/Effizienz",leistungen:[
+   {key:"energie_pv_beratung",label:"PV-/Speicher-Auslegung & Energieberatung",typisch:true},
+   {key:"energie_monitoring",label:"Energie-Monitoring / Lastmanagement (Messkonzepte)"},
+ ]},
+ {key:"emob",label:"E-Mobilität/Wallbox",leistungen:[
+   {key:"wallbox_privat",label:"Wallbox-Installation (Einfamilienhaus / privat)",typisch:true},
+   {key:"wallbox_gruppe",label:"Mehrere / gruppierte Wallboxen mit Lastmanagement"},
+   {key:"wallbox_abrechnung",label:"Abrechnungsfähige / eichrechtskonforme Ladepunkte"},
+   {key:"wallbox_pv",label:"PV-fähige Wallbox (Überschussladen)"},
+   {key:"wallbox_bidi",label:"Bidirektionales Laden (V2H / V2G)"},
+ ]},
+ {key:"geraete",label:"Geräte/Weiße Ware",leistungen:[
+   {key:"geraete_verkauf",label:"Geräteverkauf / -handel / -beratung"},
+   {key:"geraete_anschluss",label:"Geräteanschluss (Herd, Großgeräte)",typisch:true},
+   {key:"geraete_service",label:"Reparatur / Service"},
+   {key:"geraete_vernetzt",label:"Vernetzte / smarte Geräte"},
+ ]},
+ {key:"installation",label:"Installation/Gebäude",leistungen:[
+   {key:"inst_neubau",label:"Neubau- / Rohbau-Installation",typisch:true},
+   {key:"inst_sanierung",label:"Sanierung / Modernisierung im Bestand (inkl. Verteiler)",typisch:true},
+   {key:"inst_zaehlerschrank",label:"Zählerschrank / Verteiler-Modernisierung",typisch:true},
+   {key:"inst_pruefung",label:"Wiederkehrende Prüfung der Wohn-/Gebäudeinstallation"},
+   {key:"inst_pv_anschluss",label:"PV-/Speicher-Netzanschluss & Anmeldung"},
+   {key:"inst_blitzschutz",label:"Blitz- und Überspannungsschutz"},
+ ]},
+ {key:"sicherheit",label:"Sicherheitstechnik",leistungen:[
+   {key:"si_rauchmelder",label:"Rauchmelder-Installation / -Wartung"},
+   {key:"si_echeck",label:"E-Check / DGUV-V3-Prüfung (gewerblich)"},
+   {key:"si_einbruch",label:"Einbruchmeldeanlagen"},
+   {key:"si_video",label:"Videoüberwachung"},
+   {key:"si_bma",label:"Brandmeldeanlagen (BMA)"},
+   {key:"si_notlicht",label:"Sicherheits- / Notbeleuchtung"},
+   {key:"si_zutritt",label:"Zutrittskontrolle"},
+ ]},
+ {key:"smarthome",label:"Smart Home/KNX",leistungen:[
+   {key:"smarthome_knx",label:"KNX- / Bus-Installation",typisch:true},
+   {key:"smarthome_funk",label:"Funk-Nachrüstung im Bestand"},
+   {key:"smarthome_aal",label:"Altersgerechte Assistenz (AAL)"},
+   {key:"smarthome_lichtsteuerung",label:"Präsenz- / Beleuchtungssteuerung"},
+ ]},
+];
+const STILE=[
+  {key:"A",t:"Seriös",d:"Sachlich und vertrauenswürdig. Ruhiger, fachkundiger Ton."},
+  {key:"B",t:"Nahbar",d:"Persönlich und warm. Auf Augenhöhe, wie ein gutes Gespräch."},
+  {key:"C",t:"Auffällig",d:"Mutig und aufmerksamkeitsstark. Bringt es pointiert auf den Punkt."},
+];
+const MATERIAL=[
+  {key:"fotos",t:"Ein paar Fotos zwischendurch",d:"Reicht für schöne Foto-Karussells."},
+  {key:"clips",t:"Auch mal kurze Videoclips",d:"Dann sind zusätzlich Reels möglich."},
+  {key:"viel",t:"Regelmäßig Fotos und Videos",d:"Volles Format-Spektrum, mehr Abwechslung."},
+];
+const KAMERA=[
+  {key:"ja",t:"Ja, wir zeigen uns gern",d:"Gesichter und Menschen dürfen vorkommen."},
+  {key:"manchmal",t:"Kommt drauf an",d:"Mal ja, mal lieber nicht."},
+  {key:"nein",t:"Lieber nicht vor der Kamera",d:"Dann lassen wir Gesichts-Formate weg."},
+];
+const ASSETS=[
+  {key:"wohlfuehlecke",label:"Schöner Raum / Wohlfühlecke"},
+  {key:"team",label:"Team / mehrere Menschen"},
+  {key:"ladengeschaeft",label:"Laden / Schauraum"},
+  {key:"fuhrpark",label:"Auffällige Fahrzeuge / Maschinen"},
+  {key:"aussenbereich",label:"Garten / Außenfläche"},
+  {key:"sonstiges",label:"Sonstiges"},
+];
+
+const state={
+  betrieb:{name:"",email:"",email2:"",ort:"",ansprechpartner:"",oeffnungszeiten:"",website:""},
+  gewerk:"elektrotechnik",
+  gewerk_freitext:"",
+  taetigkeitsprofile:[],
+  leistungen:[],
+  material_level:"",
+  kamera:"",
+  assets:[],
+  assets_sonstiges:"",
+  logo:null,
+  farben:{haupt:"",zwei:"",drei:""},
+  schrift:"",
+  stil_profil:"",
+  anrede:"du",
+  standpunkte:{meinung:"",rat:"",handschrift:"",tabu:""},
+  eignung_bestaetigt:false,
+};
+
+/* ---- trades ---- */
+const tradesEl=document.getElementById("trades");
+const freitextWrap=document.getElementById("freitextWrap");
+TRADES.forEach(t=>{
+  const c=document.createElement("label");
+  c.className="chip radio"+(t.key===state.gewerk?" on":"");
+  c.setAttribute("role","radio");c.setAttribute("aria-checked",t.key===state.gewerk);
+  if(!t.active)c.setAttribute("aria-disabled","true");
+  c.innerHTML='<span class="tick"></span>'+t.label+(t.active?'':' <span style="font-family:JetBrains Mono;font-size:10px;color:var(--faint)">· folgt</span>');
+  c.tabIndex=t.active?0:-1;
+  const pick=()=>{ if(!t.active){toast("Für dieses Handwerk sind noch keine Inhalte hinterlegt.");return;}
+    if(state.gewerk!==t.key){ state.taetigkeitsprofile=[]; state.leistungen=[]; }
+    state.gewerk=t.key;
+    document.querySelectorAll("#trades .chip").forEach(x=>{x.classList.remove("on");x.setAttribute("aria-checked","false");});
+    c.classList.add("on");c.setAttribute("aria-checked","true");
+    freitextWrap.style.display = t.frei ? "block" : "none";
+    if(!t.frei)state.gewerk_freitext="";
+    render(); };
+  c.addEventListener("click",pick);
+  c.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();pick();}});
+  tradesEl.appendChild(c);
+});
+document.getElementById("f_freitext").addEventListener("input",e=>{state.gewerk_freitext=e.target.value;renderSummary();});
+
+/* ---- profiles + leistungen ---- */
+const profEl=document.getElementById("profiles");
+function typicalKeys(p){return p.leistungen.filter(l=>l.typisch).map(l=>l.key);}
+function renderProfiles(){
+  profEl.innerHTML="";
+  if(state.gewerk!=="elektrotechnik"){
+    const msg = state.gewerk==="anderes"
+      ? '<div class="scaffold-note"><b>Alles klar.</b> Für dein Handwerk bauen wir den Auftritt aus deinem Stil und deiner Erfahrung auf. Die Themen-Bausteine für dein Handwerk ergänzen wir, sobald sie vorbereitet sind.</div>'
+      : '<div class="scaffold-note"><b>Inhalte folgen.</b> Für dieses Handwerk ist die Themen-Sammlung noch nicht fertig. Die Struktur ist angelegt — sobald sie steht, erscheinen hier die passenden Bereiche.</div>';
+    profEl.innerHTML=msg; return;
+  }
+  ELEKTRO_PROFILE.forEach(p=>{
+    const open=state.taetigkeitsprofile.includes(p.label);
+    const chosen=p.leistungen.filter(l=>state.leistungen.includes(l.key)).length;
+    const warn=open&&chosen===0;
+    const box=document.createElement("div");
+    box.className="profile"+(open?" on":"")+(warn?" warn":"");
+    const head=document.createElement("div");
+    head.className="profile-head";head.setAttribute("role","button");head.tabIndex=0;head.setAttribute("aria-expanded",open);
+    head.innerHTML='<span class="tick" style="width:16px;height:16px;border-radius:4px;border:1.5px solid '+(open?'var(--signal)':'var(--line-strong)')+';background:'+(open?'var(--signal)':'transparent')+';display:inline-flex;align-items:center;justify-content:center">'+(open?'<span style="width:7px;height:7px;background:#fff;border-radius:2px"></span>':'')+'</span><span class="pf-name">'+p.label+'</span><span class="pf-count">'+(open?(chosen+"/"+p.leistungen.length+" Leistungen"):"antippen")+'</span>';
+    const toggle=()=>{
+      if(open){ state.taetigkeitsprofile=state.taetigkeitsprofile.filter(x=>x!==p.label);
+        state.leistungen=state.leistungen.filter(k=>!p.leistungen.some(l=>l.key===k)); }
+      else { state.taetigkeitsprofile.push(p.label);
+        typicalKeys(p).forEach(k=>{ if(!state.leistungen.includes(k))state.leistungen.push(k); }); }
+      render();
+    };
+    head.addEventListener("click",toggle);
+    head.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggle();}});
+    box.appendChild(head);
+    if(open){
+      const wrap=document.createElement("div");wrap.className="leistungen";
+      wrap.innerHTML='<p class="gate-note">↳ <span><b>Wichtig:</b> Wir zeigen nur Themen zu den Leistungen, die du hier ankreuzt. Häufige sind vorgehakt.</span></p>';
+      p.leistungen.forEach(l=>{
+        const on=state.leistungen.includes(l.key);
+        const row=document.createElement("label");
+        row.className="leis-row"+(on?" on":"");row.tabIndex=0;row.setAttribute("role","checkbox");row.setAttribute("aria-checked",on);
+        row.innerHTML='<span class="tick"></span><span class="lname">'+l.label+'</span>'+(l.typisch?'<span class="typ">häufig</span>':'');
+        const tog=()=>{ if(state.leistungen.includes(l.key))state.leistungen=state.leistungen.filter(k=>k!==l.key);
+          else state.leistungen.push(l.key); render(); };
+        row.addEventListener("click",tog);
+        row.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();tog();}});
+        wrap.appendChild(row);
+      });
+      if(warn){
+        const w=document.createElement("div");w.className="leis-warn";
+        w.innerHTML='<span class="wi">⚠️</span><span>Du hast diesen Bereich gewählt, aber <b>keine Leistung angekreuzt</b>. Bitte hak mindestens eine an — sonst können wir zu diesem Bereich keine Themen zeigen.</span>';
+        wrap.appendChild(w);
+      }
+      box.appendChild(wrap);
+    }
+    profEl.appendChild(box);
+  });
+}
+
+/* ---- material (radio) ---- */
+const matEl=document.getElementById("material");
+MATERIAL.forEach(m=>{
+  const r=document.createElement("div");r.className="optrow";r.tabIndex=0;r.setAttribute("role","radio");r.dataset.k=m.key;
+  r.innerHTML='<span class="rtick"></span><span class="otext"><span class="ot">'+m.t+'</span><span class="od">'+m.d+'</span></span>';
+  const pick=()=>{state.material_level=m.key;render();};
+  r.addEventListener("click",pick);
+  r.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();pick();}});
+  matEl.appendChild(r);
+});
+/* ---- kamera (radio) ---- */
+const kamEl=document.getElementById("kamera");
+KAMERA.forEach(m=>{
+  const r=document.createElement("div");r.className="optrow";r.tabIndex=0;r.setAttribute("role","radio");r.dataset.k=m.key;
+  r.innerHTML='<span class="rtick"></span><span class="otext"><span class="ot">'+m.t+'</span><span class="od">'+m.d+'</span></span>';
+  const pick=()=>{state.kamera=m.key;render();};
+  r.addEventListener("click",pick);
+  r.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();pick();}});
+  kamEl.appendChild(r);
+});
+/* ---- assets (multi) ---- */
+const assetsEl=document.getElementById("assets");
+ASSETS.forEach(a=>{
+  const c=document.createElement("label");c.className="chip";c.tabIndex=0;c.setAttribute("role","checkbox");c.dataset.k=a.key;
+  c.innerHTML='<span class="tick"></span>'+a.label;
+  const tog=()=>{ if(state.assets.includes(a.key))state.assets=state.assets.filter(k=>k!==a.key); else state.assets.push(a.key); render(); };
+  c.addEventListener("click",tog);
+  c.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();tog();}});
+  assetsEl.appendChild(c);
+});
+document.getElementById("f_assetOther").addEventListener("input",e=>{state.assets_sonstiges=e.target.value;renderSummary();});
+
+/* ---- stil + anrede ---- */
+const stilEl=document.getElementById("stil");
+STILE.forEach(s=>{
+  const d=document.createElement("label");d.className="stil";d.tabIndex=0;d.setAttribute("role","radio");d.dataset.k=s.key;
+  d.innerHTML='<span class="k">'+s.key+'</span><span class="t">'+s.t+'</span><span class="d">'+s.d+'</span>';
+  const pick=()=>{state.stil_profil=s.key;render();};
+  d.addEventListener("click",pick);
+  d.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();pick();}});
+  stilEl.appendChild(d);
+});
+const anredeEl=document.getElementById("anrede");
+[["du","Wir sagen „Du“ zu unseren Followern"],["sie","Wir sagen „Sie“ zu unseren Followern"]].forEach(([k,lab])=>{
+  const c=document.createElement("label");c.className="chip radio";c.tabIndex=0;c.setAttribute("role","radio");c.dataset.k=k;
+  c.innerHTML='<span class="tick"></span>'+lab;
+  const pick=()=>{state.anrede=k;render();};
+  c.addEventListener("click",pick);
+  c.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();pick();}});
+  anredeEl.appendChild(c);
+});
+
+/* ---- eignung checkbox ---- */
+const eignungEl=document.getElementById("eignung");
+const toggleEignung=()=>{state.eignung_bestaetigt=!state.eignung_bestaetigt;render();};
+eignungEl.addEventListener("click",toggleEignung);
+eignungEl.addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();toggleEignung();}});
+
+/* ---- text inputs ---- */
+const bind=(id,fn)=>document.getElementById(id).addEventListener("input",e=>{fn(e.target.value);renderSummary();});
+bind("f_name",v=>state.betrieb.name=v);
+bind("f_ort",v=>state.betrieb.ort=v);
+bind("f_kontakt",v=>state.betrieb.ansprechpartner=v);
+bind("f_zeiten",v=>state.betrieb.oeffnungszeiten=v);
+bind("f_schrift",v=>state.schrift=v);
+bind("s_meinung",v=>state.standpunkte.meinung=v);
+bind("s_rat",v=>state.standpunkte.rat=v);
+bind("s_handschrift",v=>state.standpunkte.handschrift=v);
+bind("s_tabu",v=>state.standpunkte.tabu=v);
+
+/* ---- email validation (mit Wiederholung + Kopier-/Einfüge-Sperre) ---- */
+const emInp=document.getElementById("f_email"),emWrap=document.getElementById("emailWrap"),emMsg=document.getElementById("emailMsg");
+const em2Inp=document.getElementById("f_email2"),em2Wrap=document.getElementById("email2Wrap"),em2Msg=document.getElementById("email2Msg");
+function emailValid(v){return /^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(v.trim());}
+function emailsMatch(){return state.betrieb.email.trim()!==""&&state.betrieb.email.trim().toLowerCase()===state.betrieb.email2.trim().toLowerCase();}
+function validateEmail(){
+  const raw1=emInp.value;state.betrieb.email=raw1.trim();
+  const raw2=em2Inp.value;state.betrieb.email2=raw2.trim();
+  // Feld 1: gültiges Format?
+  emWrap.classList.remove("valid","invalid");emMsg.classList.remove("show","ok","bad");
+  if(!raw1.trim()){emMsg.innerHTML="";}
+  else if(emailValid(raw1)){emWrap.classList.add("valid");}
+  else{emWrap.classList.add("invalid");emMsg.classList.add("show","bad");emMsg.textContent="Das sieht nicht nach einer gültigen E-Mail-Adresse aus.";}
+  // Feld 2: stimmt es mit Feld 1 überein?
+  em2Wrap.classList.remove("valid","invalid");em2Msg.classList.remove("show","ok","bad");
+  if(!raw2.trim()){em2Msg.innerHTML="";}
+  else if(emailsMatch()){em2Wrap.classList.add("valid");em2Msg.classList.add("show","ok");em2Msg.textContent="Die Adressen stimmen überein.";}
+  else{em2Wrap.classList.add("invalid");em2Msg.classList.add("show","bad");em2Msg.textContent="Die beiden E-Mail-Adressen stimmen nicht überein. Bitte tippe sie identisch ein.";}
+  renderSummary();
+}
+emInp.addEventListener("input",validateEmail);emInp.addEventListener("blur",validateEmail);
+em2Inp.addEventListener("input",validateEmail);em2Inp.addEventListener("blur",validateEmail);
+// Kopieren/Einfügen/Ausschneiden/Drag auf beiden Feldern unterbinden — die Adresse MUSS zweimal getippt werden
+[emInp,em2Inp].forEach(el=>{
+  ["copy","paste","cut","drop","dragstart"].forEach(ev=>el.addEventListener(ev,e=>{
+    e.preventDefault();
+    toast("Bitte die E-Mail-Adresse von Hand eintippen — Kopieren ist hier nicht möglich.");
+  }));
+});
+
+/* ---- website validation ---- */
+const webInp=document.getElementById("f_web"),webWrap=document.getElementById("webWrap"),webMsg=document.getElementById("webMsg");
+function normalizeUrl(raw){let v=raw.trim();if(!/^https?:\/\//i.test(v))v="https://"+v;return v;}
+function urlLooksValid(raw){
+  const v=raw.trim();if(!v)return null;
+  let u;try{u=new URL(normalizeUrl(v));}catch(e){return false;}
+  return /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*\.[a-z]{2,}$/i.test(u.hostname) && !/\s/.test(v);
+}
+function validateWeb(){
+  const raw=webInp.value;state.betrieb.website=raw.trim();
+  const ok=urlLooksValid(raw);
+  webWrap.classList.remove("valid","invalid");webMsg.classList.remove("show","ok","bad");
+  if(ok===null){webMsg.innerHTML="";}
+  else if(ok){webWrap.classList.add("valid");webMsg.classList.add("show","ok");
+    webMsg.innerHTML='Sieht nach einer gültigen Adresse aus. <a href="'+normalizeUrl(raw)+'" target="_blank" rel="noopener">Seite in neuem Tab öffnen</a> — bitte selbst prüfen, ob sie wirklich lädt.';}
+  else{webWrap.classList.add("invalid");webMsg.classList.add("show","bad");
+    webMsg.textContent="Das sieht nicht nach einer Webadresse aus. Bitte überprüfe ihn auf Richtigkeit.";}
+  renderSummary();
+}
+webInp.addEventListener("input",validateWeb);webInp.addEventListener("blur",validateWeb);
+
+/* ---- Farben sync ---- */
+function hexOK(v){return /^#[0-9a-fA-F]{6}$/.test(v);}
+[["c1","c1t","haupt"],["c2","c2t","zwei"],["c3","c3t","drei"]].forEach(([cid,tid,key])=>{
+  const c=document.getElementById(cid),t=document.getElementById(tid);
+  state.farben[key]=c.value.toUpperCase();t.value=c.value.toUpperCase();
+  c.addEventListener("input",()=>{t.value=c.value.toUpperCase();state.farben[key]=c.value.toUpperCase();renderSummary();});
+  t.addEventListener("input",()=>{let v=t.value.trim();if(v&&v[0]!=="#")v="#"+v;
+    if(hexOK(v)){c.value=v;state.farben[key]=v.toUpperCase();}else{state.farben[key]=t.value.trim();}renderSummary();});
+});
+function setColors(arr){
+  [["c1","c1t","haupt"],["c2","c2t","zwei"],["c3","c3t","drei"]].forEach(([cid,tid,key],i)=>{
+    if(!arr[i])return;
+    document.getElementById(cid).value=arr[i];document.getElementById(tid).value=arr[i].toUpperCase();state.farben[key]=arr[i].toUpperCase();
+  });
+  renderSummary();
+}
+
+/* ---- Logo upload ---- */
+const drop=document.getElementById("drop"),fileInp=document.getElementById("f_logo"),
+  prev=document.getElementById("logoPrev"),thumb=document.getElementById("logoThumb"),
+  fname=document.getElementById("logoName"),logoRm=document.getElementById("logoRm"),
+  suggestBtn=document.getElementById("suggest"),suggestNote=document.getElementById("suggestNote"),
+  logoAlpha=document.getElementById("logoAlpha");
+function checkTransparency(dataUrl){
+  const img=new Image();
+  img.onload=()=>{
+    const max=64,scale=Math.min(1,max/Math.max(img.width,img.height));
+    const w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+    const cv=document.createElement("canvas");cv.width=w;cv.height=h;
+    const ctx=cv.getContext("2d");ctx.drawImage(img,0,0,w,h);
+    let d;try{d=ctx.getImageData(0,0,w,h).data;}catch(e){return;}
+    let hasAlpha=false;
+    for(let i=3;i<d.length;i+=4){ if(d[i]<240){hasAlpha=true;break;} }
+    logoAlpha.classList.toggle("show",!hasAlpha);
+  };
+  img.src=dataUrl;
+}
+function handleFile(file){
+  if(!file)return;
+  if(file.type!=="image/png"){toast("Bitte ein PNG mit durchsichtigem Hintergrund wählen — wie das geht, steht direkt unter dem Feld.");return;}
+  if(file.size>4*1024*1024){toast("Das Logo ist größer als 4 MB — bitte kleiner.");return;}
+  const r=new FileReader();
+  r.onload=()=>{
+    state.logo={name:file.name,type:file.type,dataUrl:r.result};
+    thumb.src=r.result;fname.textContent=file.name;prev.classList.add("show");
+    suggestBtn.disabled=false;suggestNote.textContent="Wir schlagen die 3 häufigsten Farben vor — du kannst sie danach ändern.";
+    checkTransparency(r.result);
+    renderSummary();
+  };
+  r.readAsDataURL(file);
+}
+fileInp.addEventListener("change",e=>handleFile(e.target.files[0]));
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("drag");}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("drag");}));
+drop.addEventListener("drop",e=>{if(e.dataTransfer.files&&e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0]);});
+logoRm.addEventListener("click",e=>{e.preventDefault();state.logo=null;fileInp.value="";prev.classList.remove("show");logoAlpha.classList.remove("show");
+  suggestBtn.disabled=true;suggestNote.textContent="Erst ein Logo hochladen, dann sind Vorschläge möglich.";renderSummary();});
+function rgbToHex(r,g,b){return "#"+[r,g,b].map(x=>x.toString(16).padStart(2,"0")).join("").toUpperCase();}
+suggestBtn.addEventListener("click",()=>{
+  if(!state.logo)return;
+  const img=new Image();
+  img.onload=()=>{
+    const max=160,scale=Math.min(1,max/Math.max(img.width,img.height));
+    const w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+    const cv=document.createElement("canvas");cv.width=w;cv.height=h;
+    const ctx=cv.getContext("2d");ctx.drawImage(img,0,0,w,h);
+    let data;try{data=ctx.getImageData(0,0,w,h).data;}catch(e){toast("Farben konnten nicht gelesen werden.");return;}
+    const buckets={};
+    for(let i=0;i<data.length;i+=4){
+      const r=data[i],g=data[i+1],b=data[i+2],a=data[i+3];
+      if(a<200)continue;
+      const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+      if(mx>238&&mn>238)continue;
+      if(mx<26)continue;
+      if(mx-mn<14&&mx>60&&mx<210)continue;
+      const key=(r>>5)+"-"+(g>>5)+"-"+(b>>5);
+      (buckets[key]=buckets[key]||{n:0,r:0,g:0,b:0});
+      const o=buckets[key];o.n++;o.r+=r;o.g+=g;o.b+=b;
+    }
+    let list=Object.values(buckets).map(o=>({n:o.n,r:Math.round(o.r/o.n),g:Math.round(o.g/o.n),b:Math.round(o.b/o.n)})).sort((a,b)=>b.n-a.n);
+    const picked=[];
+    for(const c of list){ if(picked.every(p=>Math.abs(p.r-c.r)+Math.abs(p.g-c.g)+Math.abs(p.b-c.b)>60))picked.push(c); if(picked.length===3)break; }
+    if(!picked.length){toast("Keine klaren Farben gefunden — bitte von Hand wählen.");return;}
+    setColors(picked.map(c=>rgbToHex(c.r,c.g,c.b)));
+    toast(picked.length<3?("Nur "+picked.length+" Farbe(n) gefunden — gern ergänzen."):"Vorschlag eingesetzt — du kannst die Farben anpassen.");
+  };
+  img.onerror=()=>toast("Logo konnte nicht gelesen werden.");
+  img.src=state.logo.dataUrl;
+});
+
+/* ---- build object ---- */
+function buildObj(){
+  const betrieb={...state.betrieb};delete betrieb.email2;
+  return {
+    betrieb:betrieb,
+    gewerk:state.gewerk,
+    gewerk_freitext:state.gewerk_freitext,
+    taetigkeitsprofile:state.taetigkeitsprofile,
+    leistungen:state.leistungen,
+    material_level:state.material_level,
+    kamera:state.kamera,
+    assets:state.assets,
+    assets_sonstiges:state.assets_sonstiges,
+    stil_profil:state.stil_profil,
+    anrede:state.anrede,
+    farben:state.farben,
+    schrift:state.schrift,
+    logo:state.logo?{dateiname:state.logo.name,typ:state.logo.type,data_url:state.logo.dataUrl}:null,
+    standpunkte:state.standpunkte,
+    eignung_bestaetigt:state.eignung_bestaetigt,
+    _meta:{schema:"webcraft.onboarding/1.1",erstellt:new Date().toISOString()}
+  };
+}
+function completeness(){
+  let pts=0,max=9;
+  if(state.betrieb.name.trim())pts++;
+  if(state.betrieb.email.trim()&&emailValid(state.betrieb.email)&&emailsMatch())pts++;
+  if(state.gewerk&&(state.gewerk!=="anderes"||state.gewerk_freitext.trim()))pts++;
+  if(state.taetigkeitsprofile.length&&state.leistungen.length)pts++;
+  if(state.material_level)pts++;
+  if(state.kamera)pts++;
+  if(state.stil_profil)pts++;
+  if(state.anrede)pts++;
+  if(state.eignung_bestaetigt)pts++;
+  return Math.round(pts/max*100);
+}
+function missingRequired(){
+  const miss=[];
+  if(!state.betrieb.name.trim())miss.push({msg:"Name deines Betriebs fehlt",focus:"f_name"});
+  if(!state.betrieb.email.trim())miss.push({msg:"E-Mail-Adresse fehlt",focus:"f_email"});
+  else if(!emailValid(state.betrieb.email))miss.push({msg:"E-Mail-Adresse korrigieren",focus:"f_email"});
+  else if(!state.betrieb.email2.trim())miss.push({msg:"E-Mail zur Bestätigung wiederholen",focus:"f_email2"});
+  else if(!emailsMatch())miss.push({msg:"Die beiden E-Mail-Adressen müssen übereinstimmen",focus:"f_email2"});
+  if(state.gewerk==="anderes"&&!state.gewerk_freitext.trim())miss.push({msg:"Dein Handwerk im Textfeld beschreiben",focus:"f_freitext"});
+  if(!state.taetigkeitsprofile.length){miss.push({msg:"Wähle unter „Was bietest du an?“ mindestens einen Bereich",focus:"block-profile"});}
+  else{ELEKTRO_PROFILE.forEach(p=>{ if(state.taetigkeitsprofile.includes(p.label)&&!p.leistungen.some(l=>state.leistungen.includes(l.key)))
+    miss.push({msg:"Im Bereich „"+p.label+"“ mindestens eine Leistung ankreuzen",focus:"block-profile"}); }); }
+  if(!state.material_level)miss.push({msg:"Wähle, wie viel Material du beisteuern kannst",focus:"material"});
+  if(!state.kamera)miss.push({msg:"Wähle, ob ihr euch vor der Kamera zeigt",focus:"kamera"});
+  if(!state.stil_profil)miss.push({msg:"Wähle, wie deine Beiträge klingen sollen",focus:"stil"});
+  if(!state.anrede)miss.push({msg:"Wähle, wie deine Follower angesprochen werden",focus:"anrede"});
+  if(state.betrieb.website.trim()&&!urlLooksValid(state.betrieb.website))miss.push({msg:"Web-Adresse korrigieren oder leer lassen",focus:"f_web"});
+  if(!state.eignung_bestaetigt)miss.push({msg:"Bitte die kurze Bestätigung anhaken",focus:"eignung"});
+  return miss;
+}
+
+/* ---- summary ---- */
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function leistungLabels(){const out=[];ELEKTRO_PROFILE.forEach(p=>p.leistungen.forEach(l=>{if(state.leistungen.includes(l.key))out.push(l.label);}));return out;}
+function stilText(){const s=STILE.find(x=>x.key===state.stil_profil);return s?s.t.toLowerCase():"";}
+function matText(){const m=MATERIAL.find(x=>x.key===state.material_level);return m?m.t.toLowerCase():"";}
+function kamText(){const m=KAMERA.find(x=>x.key===state.kamera);return m?m.t.toLowerCase():"";}
+function renderSummary(){
+  const sv=document.getElementById("saved");if(sv)sv.classList.remove("show");
+  const nf=document.getElementById("needfix");if(nf)nf.classList.remove("show");
+  const el=document.getElementById("summary");
+  const tradeLabel=(TRADES.find(t=>t.key===state.gewerk)||{}).label||"";
+  const gw = state.gewerk==="anderes" ? (state.gewerk_freitext?esc(state.gewerk_freitext):"Anderes Handwerk") : tradeLabel;
+  const lstg=leistungLabels();
+  const farben=[state.farben.haupt,state.farben.zwei,state.farben.drei].filter(Boolean);
+  const rows=[];
+  rows.push(["Betrieb", state.betrieb.name ? esc(state.betrieb.name)+(state.betrieb.ort?' · '+esc(state.betrieb.ort):'') : null]);
+  rows.push(["Kontakt", state.betrieb.email ? esc(state.betrieb.email) : null]);
+  rows.push(["Handwerk", gw||null]);
+  rows.push(["Das bietest du an", lstg.length ? lstg.map(l=>'<span class="pill lstg">'+esc(l)+'</span>').join('') : null]);
+  rows.push(["Material & Kamera",
+    (state.material_level||state.kamera)
+      ? [state.material_level?matText():null, state.kamera?("Kamera: "+kamText()):null].filter(Boolean).join(" · ")
+      : null]);
+  const assetLabels=state.assets.filter(k=>k!=="sonstiges").map(k=>(ASSETS.find(a=>a.key===k)||{}).label).filter(Boolean);
+  if(state.assets.includes("sonstiges")&&state.assets_sonstiges.trim())assetLabels.push(state.assets_sonstiges.trim());
+  rows.push(["Was du zeigst", assetLabels.length ? assetLabels.map(l=>'<span class="pill">'+esc(l)+'</span>').join('') : null]);
+  rows.push(["Logo & Farben",
+    (state.logo||farben.length)
+      ? [ state.logo?('<img src="'+state.logo.dataUrl+'" alt="" style="height:26px;max-width:90px;object-fit:contain;vertical-align:middle;background:#fff;border-radius:4px;padding:2px;border:1px solid var(--term-line)">'):null,
+          farben.length?farben.map(c=>'<span style="display:inline-block;width:16px;height:16px;border-radius:4px;vertical-align:middle;border:1px solid var(--term-line);background:'+esc(c)+'"></span>').join(' '):null
+        ].filter(Boolean).join(' &nbsp; ')
+      : null]);
+  rows.push(["Ton & Ansprache",
+    (state.stil_profil||state.anrede)
+      ? [state.stil_profil?("Klingt "+stilText()):null, state.anrede?("spricht die Follower mit „"+(state.anrede==="du"?"Du":"Sie")+"“ an"):null].filter(Boolean).join(", ")
+      : null]);
+  const sp=[state.standpunkte.meinung,state.standpunkte.rat,state.standpunkte.handschrift,state.standpunkte.tabu].filter(x=>x&&x.trim());
+  rows.push(["Deine Note", sp.length ? sp.map(t=>'<div class="quote">'+esc(t)+'</div>').join('') : null]);
+  el.innerHTML = rows.map(([k,v],i)=>{
+    const body = v ? '<div class="rv">'+v+'</div>' : '<div class="rv empty">— noch offen</div>';
+    return (i?'<hr>':'')+'<div class="row"><div class="rk">'+k+'</div>'+body+'</div>';
+  }).join('');
+  const pct=completeness();
+  document.getElementById("pct").textContent=pct+"%";
+  document.getElementById("barfill").style.width=pct+"%";
+}
+
+/* ---- master render ---- */
+function render(){
+  renderProfiles();
+  document.querySelectorAll("#material .optrow").forEach(d=>{const on=d.dataset.k===state.material_level;d.classList.toggle("on",on);d.setAttribute("aria-checked",on);});
+  document.querySelectorAll("#kamera .optrow").forEach(d=>{const on=d.dataset.k===state.kamera;d.classList.toggle("on",on);d.setAttribute("aria-checked",on);});
+  document.querySelectorAll("#assets .chip").forEach(c=>{const on=state.assets.includes(c.dataset.k);c.classList.toggle("on",on);c.setAttribute("aria-checked",on);});
+  const otherOn=state.assets.includes("sonstiges");
+  const ow=document.getElementById("assetOtherWrap");
+  ow.classList.toggle("show",otherOn);
+  if(!otherOn&&state.assets_sonstiges){state.assets_sonstiges="";document.getElementById("f_assetOther").value="";}
+  document.querySelectorAll("#stil .stil").forEach(d=>{const on=d.dataset.k===state.stil_profil;d.classList.toggle("on",on);d.setAttribute("aria-checked",on);});
+  document.querySelectorAll("#anrede .chip").forEach(c=>{const on=c.dataset.k===state.anrede;c.classList.toggle("on",on);c.setAttribute("aria-checked",on);});
+  eignungEl.classList.toggle("on",state.eignung_bestaetigt);eignungEl.setAttribute("aria-checked",state.eignung_bestaetigt);
+  renderSummary();
+}
+
+/* ---- actions ---- */
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("show"),2400);}
+document.getElementById("dl").addEventListener("click",()=>{
+  const nf=document.getElementById("needfix"),sv=document.getElementById("saved");
+  const miss=missingRequired();
+  if(miss.length){
+    sv.classList.remove("show");
+    document.getElementById("needfixList").innerHTML=miss.map(m=>'<li>'+m.msg+'</li>').join("");
+    nf.classList.add("show");nf.scrollIntoView({behavior:"smooth",block:"nearest"});
+    const t=document.getElementById(miss[0].focus);
+    if(t){t.scrollIntoView({behavior:"smooth",block:"center"});
+      const inp=t.matches("input,textarea")?t:t.querySelector("input,textarea");
+      if(inp)setTimeout(()=>inp.focus({preventScroll:true}),350);}
+    toast("Bitte zuerst die markierten Pflichtangaben ergänzen.");
+    return;
+  }
+  nf.classList.remove("show");
+  const name=(state.betrieb.name||"betrieb").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+  const blob=new Blob([JSON.stringify(buildObj(),null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="onboarding-"+name+".json";document.body.appendChild(a);a.click();a.remove();
+  sv.classList.add("show");sv.scrollIntoView({behavior:"smooth",block:"nearest"});
+  toast("Deine Angaben wurden gespeichert.");
+});
+
+render();
+</script>
+</body>
+</html>
