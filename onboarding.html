@@ -139,11 +139,11 @@
   .color{border:1px solid var(--line-strong);border-radius:9px;padding:11px;background:var(--paper);}
   .color .clab{font-size:12px;font-weight:500;color:var(--muted);margin-bottom:7px;}
   .color .crow{display:flex;align-items:center;gap:8px;}
-  .color input[type=color]{width:44px;height:38px;border:1px solid var(--line-strong);border-radius:8px;padding:2px;cursor:pointer;flex:none;}
-  .color input[type=text]{flex:1;min-width:0;}
-  .color input[type=color]::-webkit-color-swatch-wrapper{padding:3px;}
-  .color input[type=color]::-webkit-color-swatch{border:none;border-radius:5px;}
-  .color input[type=text]{font-family:"JetBrains Mono";font-size:13px;text-transform:uppercase;}
+  .color .cprev{width:40px;height:40px;border-radius:8px;border:1px solid var(--line-strong);flex:none;background:#0F6E62;}
+  .color input[type=text]{flex:1;min-width:0;font-family:"JetBrains Mono";font-size:14px;text-transform:uppercase;}
+  .cpresets{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+  .cpresets .tile{width:30px;height:30px;border-radius:7px;border:1px solid rgba(0,0,0,.18);cursor:pointer;padding:0;}
+  .cpresets .tile.sel{outline:2px solid var(--signal);outline-offset:2px;}
   .suggest-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:14px;}
   .btn-sm{font:inherit;font-weight:600;font-size:13px;border-radius:8px;cursor:pointer;padding:9px 14px;border:1px solid var(--signal);background:var(--signal-soft);color:var(--signal-deep);}
   .btn-sm:hover{background:var(--signal);color:#fff;}
@@ -288,15 +288,15 @@
       <p class="lab" style="font-size:13px;font-weight:500;margin:22px 0 4px;">Deine drei Farben</p>
       <p class="sec-desc" style="margin:0 0 12px;">Die Farben, die zu dir passen. Du kannst sie selbst wählen — oder unten aus dem Logo vorschlagen lassen und dann anpassen.</p>
       <div class="colors" id="colors">
-        <div class="color"><div class="clab">Hauptfarbe</div><div class="crow">
-          <input type="color" id="c1" value="#0F6E62" aria-label="Hauptfarbe wählen">
-          <input type="text" id="c1t" placeholder="#0F6E62" maxlength="7"></div></div>
-        <div class="color"><div class="clab">Zweite Farbe</div><div class="crow">
-          <input type="color" id="c2" value="#1A1D21" aria-label="Zweite Farbe wählen">
-          <input type="text" id="c2t" placeholder="#1A1D21" maxlength="7"></div></div>
-        <div class="color"><div class="clab">Dritte Farbe</div><div class="crow">
-          <input type="color" id="c3" value="#F4F3EE" aria-label="Dritte Farbe wählen">
-          <input type="text" id="c3t" placeholder="#F4F3EE" maxlength="7"></div></div>
+        <div class="color"><div class="clab">Hauptfarbe</div>
+          <div class="crow"><span class="cprev" id="c1p"></span><input type="text" id="c1t" placeholder="#0F6E62" maxlength="7" inputmode="text" autocapitalize="characters"></div>
+          <div class="cpresets" data-prev="c1p" data-txt="c1t" data-key="haupt"></div></div>
+        <div class="color"><div class="clab">Zweite Farbe</div>
+          <div class="crow"><span class="cprev" id="c2p"></span><input type="text" id="c2t" placeholder="#1A1D21" maxlength="7" inputmode="text" autocapitalize="characters"></div>
+          <div class="cpresets" data-prev="c2p" data-txt="c2t" data-key="zwei"></div></div>
+        <div class="color"><div class="clab">Dritte Farbe</div>
+          <div class="crow"><span class="cprev" id="c3p"></span><input type="text" id="c3t" placeholder="#F4F3EE" maxlength="7" inputmode="text" autocapitalize="characters"></div>
+          <div class="cpresets" data-prev="c3p" data-txt="c3t" data-key="drei"></div></div>
       </div>
       <div class="suggest-row">
         <button type="button" class="btn-sm" id="suggest" disabled>Farben aus Logo vorschlagen</button>
@@ -721,22 +721,27 @@ function validateWeb(){
 }
 webInp.addEventListener("input",validateWeb);webInp.addEventListener("blur",validateWeb);
 
-/* ---- Farben sync ---- */
+/* ---- Farben: Vorschau + Hex + Preset-Kacheln (mobil-/WebView-sicher, kein nativer Picker) ---- */
 function hexOK(v){return /^#[0-9a-fA-F]{6}$/.test(v);}
-[["c1","c1t","haupt"],["c2","c2t","zwei"],["c3","c3t","drei"]].forEach(([cid,tid,key])=>{
-  const c=document.getElementById(cid),t=document.getElementById(tid);
-  const paint=()=>{c.style.background=c.value;};   // Box zeigt die Farbe (mobil-tauglich, sonst schwarz)
-  state.farben[key]=c.value.toUpperCase();t.value=c.value.toUpperCase();paint();
-  c.addEventListener("input",()=>{t.value=c.value.toUpperCase();state.farben[key]=c.value.toUpperCase();paint();renderSummary();});
+const PRESETS=["#0F6E62","#2563EB","#0EA5A0","#16A34A","#7C3AED","#9333EA","#DB2777","#E11D48","#C2410C","#F59E0B","#1A1D21","#334155","#F4F3EE","#FFFFFF"];
+const COLS=[["c1p","c1t","haupt","#0F6E62"],["c2p","c2t","zwei","#1A1D21"],["c3p","c3t","drei","#F4F3EE"]];
+function applyColor(pid,tid,key,hex,setText){
+  document.getElementById(pid).style.background=hex;
+  if(setText)document.getElementById(tid).value=hex.toUpperCase();
+  state.farben[key]=hex.toUpperCase();
+  const wrap=document.querySelector('.cpresets[data-prev="'+pid+'"]');
+  if(wrap)Array.from(wrap.children).forEach(b=>b.classList.toggle("sel",(b.dataset.hex||"").toUpperCase()===hex.toUpperCase()));
+}
+COLS.forEach(([pid,tid,key,def])=>{
+  const wrap=document.querySelector('.cpresets[data-prev="'+pid+'"]'),t=document.getElementById(tid);
+  PRESETS.forEach(hex=>{const b=document.createElement("button");b.type="button";b.className="tile";b.dataset.hex=hex;b.style.background=hex;b.setAttribute("aria-label","Farbe "+hex);
+    b.addEventListener("click",()=>{applyColor(pid,tid,key,hex,true);renderSummary();});wrap.appendChild(b);});
   t.addEventListener("input",()=>{let v=t.value.trim();if(v&&v[0]!=="#")v="#"+v;
-    if(hexOK(v)){c.value=v;state.farben[key]=v.toUpperCase();paint();}else{state.farben[key]=t.value.trim();}renderSummary();});
+    if(hexOK(v))applyColor(pid,tid,key,v,false);else state.farben[key]=t.value.trim();renderSummary();});
+  applyColor(pid,tid,key,def,true);
 });
 function setColors(arr){
-  [["c1","c1t","haupt"],["c2","c2t","zwei"],["c3","c3t","drei"]].forEach(([cid,tid,key],i)=>{
-    if(!arr[i])return;
-    const c=document.getElementById(cid);c.value=arr[i];c.style.background=arr[i];
-    document.getElementById(tid).value=arr[i].toUpperCase();state.farben[key]=arr[i].toUpperCase();
-  });
+  COLS.forEach(([pid,tid,key],i)=>{ if(arr[i])applyColor(pid,tid,key,arr[i],true); });
   renderSummary();
 }
 
