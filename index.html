@@ -52,7 +52,9 @@ section[id],div[id]{scroll-margin-top:76px}
 header{position:fixed;top:0;left:0;right:0;z-index:50;background:rgba(5,7,13,.55);backdrop-filter:saturate(1.6) blur(18px);-webkit-backdrop-filter:saturate(1.6) blur(18px);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
 header.scrolled{border-color:var(--edge);background:rgba(5,7,13,.78)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:62px}
-.nav-logo img{height:26px;width:auto;filter:brightness(0) invert(1)}
+.nav-logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.08rem;letter-spacing:-.02em;color:#fff}
+.nav-logo img{height:28px;width:auto;border-radius:7px}
+.nav-logo .craft{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .nav-links{display:flex;gap:32px;align-items:center}
 .nav-links a{font-size:.88rem;font-weight:500;color:var(--gray);transition:color .2s}
 .nav-links a:hover{color:var(--ink)}
@@ -269,7 +271,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
 
 <header id="header">
   <div class="container nav">
-    <a href="#" class="nav-logo"><img src="assets/img/webcraft-lockup.png" alt="WebCraft"></a>
+    <a href="#" class="nav-logo"><img src="assets/img/webcraft-icon-verlauf.svg" alt="WebCraft-Logo">Web<span class="craft">Craft</span></a>
     <nav class="nav-links">
       <a href="#leistungen">Leistungen</a>
       <a href="#referenzen">Referenzen</a>
@@ -315,7 +317,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
       </div>
       <div class="value reveal">
         <div class="v-ico"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2.5"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg></div>
-        <b>Eigene Produkte</b><span>Wir bauen nicht nur — wir betreiben selbst eine App mit echten Nutzern.</span>
+        <b>Eigene Produkte</b><span>Wir bauen nicht nur für Kunden — wir betreiben eigene Apps und erfolgreiche Social-Media-Kanäle.</span>
       </div>
     </div>
   </div>
@@ -347,7 +349,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
         <p>Moderne, schnelle Websites, die Vertrauen aufbauen und Anfragen bringen.</p>
         <ul>
           <li>Design &amp; Umsetzung</li>
-          <li>Mehrsprachig (DE / ES / EN)</li>
+          <li>Mehrsprachig — in jeder gewünschten Sprache</li>
           <li>Suchmaschinen-Optimierung</li>
           <li>Hosting, Wartung &amp; Pflege</li>
         </ul>
@@ -453,7 +455,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
         <div class="work-body">
           <div class="work-kicker">CONTENT · VIDEO · INSTAGRAM</div>
           <h3>Content-Produktion</h3>
-          <p>Gebrandete Animations-Clips und Posts für Social Media — im eigenen Studio produziert, im Look Ihrer Marke, auf Deutsch und Spanisch.</p>
+          <p>Gebrandete Animations-Clips und Posts für Social Media — im eigenen Studio produziert, im Look Ihrer Marke, in Ihrer Sprache.</p>
           <span class="work-link" style="color:var(--gray-2)">Beispiele im Erstgespräch</span>
         </div>
       </div>
@@ -475,8 +477,8 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
         <p>Unsere eigene App und unsere eigenen Seiten laufen im echten Betrieb — mit echten Nutzern. Sie bekommen Lösungen, die sich bewährt haben, keine Experimente.</p>
       </div>
       <div class="why-item reveal">
-        <h3>Deutsch, Spanisch, Englisch</h3>
-        <p>Wir kommunizieren mit Ihnen auf Deutsch und bauen Ihren Auftritt für den Markt, den Sie erreichen wollen — auch mehrsprachig für lokale Kundschaft.</p>
+        <h3>Jede Sprache, die Ihr Markt braucht</h3>
+        <p>Wir kommunizieren mit Ihnen auf Deutsch oder Englisch — und bauen Ihren Auftritt in jeder gewünschten Sprache, auch mehrsprachig für internationale Kundschaft.</p>
       </div>
       <div class="why-item reveal">
         <h3>Ein Ansprechpartner, kein Ticketsystem</h3>
@@ -552,7 +554,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
       </details>
       <details class="faq-item reveal">
         <summary>Wo sitzt ihr eigentlich?<span class="faq-ico"></span></summary>
-        <div class="faq-body"><p>Unser Team arbeitet von Deutschland und Paraguay aus — für Kunden im gesamten deutschsprachigen Raum. Die Zusammenarbeit läuft ohnehin digital: auf Deutsch, per WhatsApp, E-Mail und Videocall. Wo wir sitzen, merken Sie höchstens daran, dass wir auch abends noch erreichbar sind.</p></div>
+        <div class="faq-body"><p>Unser Team arbeitet von Deutschland und Paraguay aus — für Kunden im gesamten deutschsprachigen Raum. Die Zusammenarbeit läuft ohnehin digital: auf Deutsch oder Englisch, per WhatsApp, E-Mail und Videocall. Wo wir sitzen, merken Sie höchstens daran, dass wir auch abends noch erreichbar sind.</p></div>
       </details>
     </div>
   </div>
@@ -570,7 +572,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
         WhatsApp schreiben
       </a>
     </div>
-    <div class="cta-note reveal">Kostenloses Erstgespräch · Antwort in der Regel innerhalb weniger Stunden · auf Deutsch</div>
+    <div class="cta-note reveal">Kostenloses Erstgespräch · Antwort in der Regel innerhalb weniger Stunden · auf Deutsch oder Englisch</div>
   </div>
 </section>
 
