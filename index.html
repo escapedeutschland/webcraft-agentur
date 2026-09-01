@@ -174,12 +174,11 @@ header.scrolled{border-color:var(--edge);background:rgba(5,7,13,.78)}
 .shot-adler{background:radial-gradient(120% 130% at 15% 0%,#1d5666 0%,#0e333d 60%,#071c22 100%)}
 .shot-escape{background:radial-gradient(120% 130% at 15% 0%,#23283a 0%,#12141d 60%,#08090f 100%)}
 .shot-clip{background:radial-gradient(120% 130% at 50% 0%,#1b2233 0%,#0d1019 65%,#070910 100%)}
-.shot-clip .phone{width:37%;height:118%;margin-top:8%}
-.shot-clip .phone video{width:100%;height:100%;object-fit:cover;object-position:top;display:block;border-radius:28px 28px 0 0}
-.shot-clip .phone--l{transform:rotate(-3.5deg) translateX(7%)}
-.shot-clip .phone--r{transform:rotate(2.5deg) translateX(-7%) translateY(12px);z-index:0}
-.work-card:hover .shot-clip .phone--l{transform:rotate(-2.5deg) translateX(7%) translateY(-6px)}
-.work-card:hover .shot-clip .phone--r{transform:rotate(1.5deg) translateX(-7%) translateY(4px)}
+.shot-clip .bframe{width:78%}
+.shot-clip .bframe video{width:100%;display:block}
+.phone-front{position:absolute;z-index:2;right:4.5%;bottom:-8%;width:23%;border:6px solid #17181c;border-radius:24px;overflow:hidden;background:#17181c;box-shadow:0 0 0 1px rgba(255,255,255,.16),0 34px 70px -20px rgba(0,0,0,.8);transform:rotate(2deg);transition:transform .5s cubic-bezier(.2,.6,.2,1)}
+.work-card:hover .phone-front{transform:rotate(1deg) translateY(-7px)}
+.phone-front video{width:100%;aspect-ratio:9/16;object-fit:cover;display:block;border-radius:18px}
 .work-shot::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.09) 0%,transparent 26%);pointer-events:none}
 /* Browser mockup — dark glass chrome */
 .bframe{position:relative;z-index:1;width:82%;background:#101218;border-radius:14px 14px 0 0;overflow:hidden;box-shadow:0 0 0 1px rgba(255,255,255,.14),0 44px 90px -26px rgba(0,0,0,.75);transform:translateY(14px);transition:transform .5s cubic-bezier(.2,.6,.2,1)}
@@ -455,8 +454,11 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
       </a>
       <div class="work-card reveal">
         <div class="work-shot shot-clip">
-          <div class="phone phone--l"><video src="assets/video/clip-sisu-1.mp4" poster="assets/video/clip-sisu-1.jpg" muted loop playsinline preload="metadata" aria-label="Ausschnitt aus einem Imagefilm für einen Sicherheitsdienst"></video></div>
-          <div class="phone phone--r"><video src="assets/video/clip-sisu-2.mp4" poster="assets/video/clip-sisu-2.jpg" muted loop playsinline preload="metadata" aria-label="Ausschnitt aus einem Imagefilm — Konzertaufnahmen bei Nacht"></video></div>
+          <div class="bframe">
+            <div class="bbar"><span class="bdot"></span><span class="bdot"></span><span class="bdot"></span><span class="burl">SISU Sicherheitsdienst · Imagefilm</span></div>
+            <video src="assets/video/clip-sisu-wide.mp4" poster="assets/video/clip-sisu-wide.jpg" muted loop playsinline preload="metadata" aria-label="Ausschnitt aus einem Imagefilm für einen Sicherheitsdienst — Festival-Szenen"></video>
+          </div>
+          <div class="phone-front"><video src="assets/video/clip-sisu-1.mp4" poster="assets/video/clip-sisu-1.jpg" muted loop playsinline preload="metadata" aria-label="Hochformat-Version des Imagefilms für Social Media"></video></div>
         </div>
         <div class="work-body">
           <div class="work-kicker">CONTENT · VIDEO · INSTAGRAM</div>
