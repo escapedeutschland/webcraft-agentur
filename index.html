@@ -267,7 +267,9 @@ header.scrolled{border-color:var(--edge);background:rgba(5,7,13,.78)}
 /* Footer */
 footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
 .foot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;border-top:1px solid var(--edge);padding-top:28px}
-.foot img{height:20px;width:auto;filter:brightness(0) invert(1);opacity:.7}
+.foot-logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:.95rem;letter-spacing:-.02em;color:#fff;opacity:.85}
+.foot-logo img{height:20px;width:auto;border-radius:5px}
+.foot-logo .craft{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .foot-links{display:flex;gap:14px 24px;flex-wrap:wrap;justify-content:center}
 .foot-links a:hover{color:var(--ink)}
 </style>
@@ -586,7 +588,7 @@ footer{padding:36px 0;font-size:.82rem;color:var(--gray-2)}
 
 <footer>
   <div class="container foot">
-    <img src="assets/img/webcraft-lockup.png" alt="WebCraft">
+    <div class="foot-logo"><img src="assets/img/webcraft-icon-verlauf.svg" alt="WebCraft-Logo"><span>Web<span class="craft">Craft</span></span></div>
     <div class="foot-links">
       <a href="#leistungen">Leistungen</a>
       <a href="#referenzen">Referenzen</a>
